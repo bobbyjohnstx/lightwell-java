@@ -11,9 +11,10 @@ repo/
 settings.xml
 !settings.xml.example
 
-# Secrets
+# Secrets and local config — NEVER commit
 .env
 .netrc
+SETUP.local
 
 # IDE
 .idea/
