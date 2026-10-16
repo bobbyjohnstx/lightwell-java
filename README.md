@@ -27,6 +27,51 @@ make verify                # Confirm .rhlw-0000X version suffixes
 make reset                 # Snap back to vulnerable state for next demo
 ```
 
+## Pre-Demo Check
+
+Run `make doctor` before any demo to verify your environment:
+
+```
+=== Lightwell Java Demo — Environment Check ===
+
+Runtime:
+  ✓  Java 26.0.2.1 (17+ required)
+  ✓  Maven 3.9.16
+
+Credentials:
+  ✓  ~/.netrc exists (permissions 600)
+  ✓  Lightwell credentials found in ~/.netrc
+  ✓  Lightwell auth verified (HTTP 200)
+  ✓  JFrog credentials found in ~/.netrc
+  ✓  JFrog auth verified (HTTP 200)
+
+Maven:
+  ✓  settings.xml exists (permissions 600)
+
+Scanners:
+  ✓  Grype installed
+
+Project:
+  ✓  Local Maven repository exists
+  ✓  minimal/pom.xml exists
+  ✓  chatbot/pom.xml exists
+  ✓  settings.xml.example exists
+
+Lightwell catalog:
+  ✓  Java Remediated catalog accessible (jackson-databind: 14 remediated versions)
+  ✓  Java OSV/VEX data accessible (272 CVE records)
+```
+
+Checks performed:
+- **Runtime** — Java 17+ (detected via Maven to handle macOS stub) and Maven 3.9+
+- **Credentials** — `~/.netrc` exists with correct permissions (600), contains entries for `packages.redhat.com` and JFrog. Tests actual authentication against both APIs — catches expired or revoked tokens before you're in front of a customer.
+- **Maven** — `settings.xml` generated with owner-only permissions (600), not world-readable
+- **Scanners** — Grype available, NVD API key for OWASP dependency-check (optional), Black Duck `.env` token (optional)
+- **Project** — local Maven repo, pom.xml files, and settings.xml.example all present
+- **Catalog** — live connectivity to the Lightwell Java Remediated repository (counts jackson-databind versions) and OSV/VEX endpoint (counts CVE records)
+
+Items are flagged as pass (✓), warning (⚠ optional feature unavailable), or failure (✗ demo will not work).
+
 ## Demo Apps
 
 **Minimal** (`minimal/`) — single Java class using Jackson (JSON) and SnakeYAML. For quick testing.
