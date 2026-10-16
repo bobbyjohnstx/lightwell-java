@@ -36,6 +36,8 @@ while IFS= read -r jar; do
         SBOM_FILE=$(echo "$SBOM_ENTRY" | awk '{print $NF}' | head -1)
         if [[ -n "$SBOM_FILE" ]]; then
             echo ""
+            echo "  \$ unzip -p $BASENAME $SBOM_FILE"
+            echo ""
             unzip -p "$jar" "$SBOM_FILE" 2>/dev/null | python3 -m json.tool 2>/dev/null | head -30
             echo "  ..."
         fi
