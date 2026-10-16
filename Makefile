@@ -1,4 +1,4 @@
-.PHONY: doctor setup scan remediate remediate-jfrog verify reset run run-minimal provenance sbom vex lens test test-integration help
+.PHONY: doctor setup scan remediate remediate-jfrog verify reset run demo run-minimal provenance sbom vex lens test test-integration help
 
 APP ?= chatbot
 
@@ -49,8 +49,12 @@ test: ## Run unit tests
 test-integration: ## Run full demo cycle against live Lightwell API
 	@bash tests/test_integration.sh
 
-run: ## Run the Spring Boot chatbot app
+run: ## Run the Spring Boot chatbot app (run 'make remediate' first for Spring Boot compatibility)
 	@mvn -f chatbot/pom.xml spring-boot:run -Dmaven.repo.local=./repo -q
+
+demo: ## Serve the demo dashboard at http://localhost:8001/demo.html
+	@echo "Demo dashboard at http://localhost:8001/demo.html"
+	@cd chatbot/src/main/resources/static && python3 -m http.server 8001
 
 run-minimal: ## Run the minimal Jackson/SnakeYAML app
 	@mvn -f minimal/pom.xml compile exec:java -Dmaven.repo.local=./repo -q
