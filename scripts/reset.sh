@@ -12,15 +12,16 @@ echo ""
 
 # Restore original pom.xml if backup exists
 if [[ -f "${POM_FILE}.orig" ]]; then
-    echo "Restoring original pom.xml..."
+    echo "  \$ mv pom.xml.orig pom.xml"
     mv "${POM_FILE}.orig" "$POM_FILE"
 fi
 
 if [[ -d "$REPO_DIR" ]]; then
-    echo "Removing project-local Maven repository..."
+    echo "  \$ rm -rf repo/"
     rm -rf "$REPO_DIR"
 fi
 
+echo ""
 echo "Recreating environment with unpatched dependencies..."
 "$SCRIPT_DIR/setup.sh" "$APP"
 

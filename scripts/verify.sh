@@ -23,6 +23,9 @@ if [[ -f "$SETTINGS_FILE" ]]; then
     PROFILE_ARG="-Plightwell"
 fi
 
+echo "  \$ mvn dependency:tree -f $APP/pom.xml"
+echo ""
+
 TREE=$(mvn -f "$POM_FILE" dependency:tree -Dmaven.repo.local="$REPO_DIR" $SETTINGS_ARG $PROFILE_ARG 2>/dev/null | grep -E '^\[INFO\] [|+\\]' || true)
 
 FOUND_RHLW=false

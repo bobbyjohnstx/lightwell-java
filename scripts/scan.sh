@@ -28,6 +28,7 @@ if [[ -n "${BLACKDUCK_API_TOKEN:-}" ]]; then
 
     BLACKDUCK_URL="${BLACKDUCK_URL:-https://redhathub.blackducksoftware.com}"
 
+    echo "  \$ bash detect.sh --blackduck.url=$BLACKDUCK_URL"
     bash <(curl -s -L https://detect.blackduck.com/detect.sh) \
         --blackduck.url="$BLACKDUCK_URL" \
         --blackduck.api.token="$BLACKDUCK_API_TOKEN" \
@@ -38,6 +39,7 @@ fi
 # Try grype
 if command -v grype &>/dev/null; then
     echo "Scanner: Grype"
+    echo "  \$ grype dir:$APP/"
     echo ""
     grype dir:"$PROJECT_DIR/$APP" --only-fixed || true
     exit 0
@@ -46,6 +48,7 @@ fi
 # Try OWASP dependency-check via Maven plugin (requires NVD API key)
 if [[ -n "${NVD_API_KEY:-}" ]]; then
     echo "Scanner: OWASP Dependency-Check (Maven plugin)"
+    echo "  \$ mvn dependency-check:check"
     echo ""
     mvn -f "$POM_FILE" org.owasp:dependency-check-maven:check \
         -Dmaven.repo.local="$REPO_DIR" \
@@ -55,6 +58,7 @@ fi
 
 # Fallback: mvn dependency:tree to at least show what's installed
 echo "Scanner: Maven dependency:tree (no vulnerability scanner found)"
+echo "  \$ mvn dependency:tree"
 echo ""
 echo "Showing dependency versions — check manually for CVEs:"
 echo ""
@@ -63,4 +67,4 @@ echo ""
 echo "Install a scanner for automated CVE detection:"
 echo "  1. Grype      — brew install grype"
 echo "  2. Black Duck — set BLACKDUCK_API_TOKEN in .env"
-echo "  3. OWASP      — add dependency-check-maven plugin to pom.xml"
+echo "  3. OWASP      — set NVD_API_KEY in .env"

@@ -29,9 +29,11 @@ echo ""
 cp "$POM_FILE" "${POM_FILE}.orig"
 
 # Extract dependencies and check for .rhlw- versions
+echo "  \$ mvn dependency:list -f $APP/pom.xml"
 DEPS=$(mvn -f "$POM_FILE" dependency:list -Dmaven.repo.local="$REPO_DIR" 2>/dev/null \
     | grep -E '\[INFO\].*:jar:.*:compile' | sed 's/.*\[INFO\]//' | sed 's/^ *//' | sed 's/ -- .*//' || true)
 
+echo ""
 while IFS= read -r dep; do
     [[ -z "$dep" ]] && continue
 
@@ -42,10 +44,12 @@ while IFS= read -r dep; do
 
     # Check Lightwell repo for .rhlw- versions of this artifact
     METADATA_URL="$LIGHTWELL_BASE/$GROUP_PATH/$ARTIFACT/maven-metadata.xml"
+    echo "  \$ curl $LIGHTWELL_BASE/.../$ARTIFACT/maven-metadata.xml"
     METADATA=$(curl -sL --netrc "$METADATA_URL" 2>/dev/null || true)
 
     if [[ -z "$METADATA" ]] || echo "$METADATA" | grep -q "Not Found"; then
         echo "  - $GROUP:$ARTIFACT:$VERSION — not in Lightwell catalog"
+        echo ""
         continue
     fi
 
@@ -73,10 +77,11 @@ PYEOF
     else
         echo "  - $GROUP:$ARTIFACT:$VERSION — version not matched in Lightwell catalog"
     fi
+    echo ""
 done <<< "$DEPS"
 
-echo ""
 echo "Re-resolving dependencies with updated versions..."
+echo "  \$ mvn dependency:resolve -Plightwell -U -s settings.xml"
 mvn -f "$POM_FILE" dependency:resolve -U \
     -s "$SETTINGS_FILE" \
     -Dmaven.repo.local="$REPO_DIR" \
