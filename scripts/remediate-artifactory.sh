@@ -7,6 +7,12 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 REPO_DIR="$PROJECT_DIR/repo"
 POM_FILE="$PROJECT_DIR/$APP/pom.xml"
 
+if [[ -f "$PROJECT_DIR/.env" ]]; then
+    set -a
+    source "$PROJECT_DIR/.env"
+    set +a
+fi
+
 # JFrog Cloud instance (Maven repos proxy cleanly — no Pulp issue like Python)
 JFROG_INSTANCE="${JFROG_INSTANCE:-your-instance}"
 JFROG_REPO="${JFROG_REPO:-lightwell-java-remediated}"
