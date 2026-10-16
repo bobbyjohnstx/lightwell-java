@@ -33,6 +33,7 @@ SETUP.local
 
 # Project instructions (local only)
 CLAUDE.md
+.claude/
 
 # Superpowers
 .superpowers/
