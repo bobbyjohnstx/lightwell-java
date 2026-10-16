@@ -76,13 +76,26 @@ Items are flagged as pass (✓), warning (⚠ optional feature unavailable), or 
 
 **Minimal** (`minimal/`) — single Java class using Jackson (JSON) and SnakeYAML. For quick testing.
 
-**Chatbot** (`chatbot/`) — Spring Boot web app with a mocked customer service chatbot UI. Professional look for customer demos. Runs on port 8080.
+**Chatbot** (`chatbot/`) — Spring Boot web app with a mocked customer service chatbot UI. Professional look for customer demos. Runs on port 8080. Note: `make run` requires `make remediate` first (jackson-databind 2.11.3 is too old for Spring Boot 3.x auto-configuration).
+
+**Demo Dashboard** (`demo.html`) — Red Hat branded interactive walkthrough. 8 narrated steps covering the full supply chain security story: 17 CVEs across 4 libraries, remediation, SBOM, provenance, VEX, and architecture. Designed for half-screen use alongside a live terminal.
 
 ```bash
 make setup APP=minimal     # Use minimal app
 make setup APP=chatbot     # Use chatbot app (default)
+make demo                  # Launch demo dashboard at http://localhost:8001/demo.html
+make remediate             # Required before make run (fixes Spring Boot compatibility)
 make run                   # Launch chatbot at http://localhost:8080
 ```
+
+### Presenting the Demo
+
+Run `make demo` to serve the dashboard, then open:
+- `http://localhost:8001/demo.html` — the narrated dashboard (left half of screen)
+
+In the terminal (right half of screen), run the `make` commands as you click through each dashboard step. The dashboard provides the narrative context; the terminal shows the live proof.
+
+Navigate the dashboard with the numbered step dots, arrow keys, or the Next/Back buttons.
 
 ## All Targets
 
@@ -94,7 +107,8 @@ make remediate             # Patch via Lightwell direct
 make remediate-jfrog       # Patch via JFrog Artifactory proxy
 make verify                # Show dependency tree, confirm .rhlw suffixes
 make reset                 # Reset to unpatched state
-make run                   # Start Spring Boot chatbot (port 8080)
+make demo                  # Serve demo dashboard at http://localhost:8001/demo.html
+make run                   # Start Spring Boot chatbot (port 8080, requires make remediate first)
 make run-minimal           # Run minimal Jackson/SnakeYAML app
 make sbom                  # Extract SBOM from remediated JARs
 make provenance            # Show SLSA L3 build provenance info
