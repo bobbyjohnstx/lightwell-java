@@ -78,13 +78,6 @@
                 <div class="dep-cards">
                     <div class="dep-card">
                         <div class="dep-card-header">
-                            <h4>jackson-databind</h4>
-                            <span class="dep-version">2.11.3</span>
-                        </div>
-                        <p class="dep-desc">JSON processing &mdash; serialization, deserialization, data binding</p>
-                    </div>
-                    <div class="dep-card">
-                        <div class="dep-card-header">
                             <h4>snakeyaml</h4>
                             <span class="dep-version">1.33</span>
                         </div>
@@ -115,11 +108,10 @@
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">mvn dependency:tree</span>
 <span class="t-muted">[INFO] com.example:lightwell-demo:jar:1.0.0</span>
-<span class="t-muted">[INFO] +- </span>com.fasterxml.jackson.core:jackson-databind:jar:<span class="t-green">2.11.3</span>
 <span class="t-muted">[INFO] +- </span>org.yaml:snakeyaml:jar:<span class="t-green">1.33</span>
 <span class="t-muted">[INFO] +- </span>org.apache.httpcomponents:httpclient:jar:<span class="t-green">4.5.6</span>
 <span class="t-muted">[INFO] +- </span>com.google.code.gson:gson:jar:<span class="t-green">2.8.6</span>
-<span class="t-muted">[INFO] \- org.springframework.boot:spring-boot-starter:jar:2.7.18</span>
+<span class="t-muted">[INFO] \- org.springframework.boot:spring-boot-starter:jar:3.2.5</span>
 <span class="t-muted">[INFO]    +- ... (39 dependencies total)</span></pre>
                 </div>
             </div>
@@ -141,9 +133,9 @@
                 </div>
 
                 <div class="stat-hero stat-danger">
-                    <span class="stat-number">17</span>
+                    <span class="stat-number">14</span>
                     <span class="stat-label">Known CVEs</span>
-                    <span class="stat-detail">10 High &bull; 7 Medium</span>
+                    <span class="stat-detail">7 High &bull; 7 Medium</span>
                 </div>
 
                 <div class="terminal">
@@ -158,15 +150,12 @@
 <span class="t-muted">Scanner: Grype</span>
 <span class="t-muted">  $ grype dir:. --add-cpes-from-package</span>
 
-<span class="t-red">Found 17 vulnerabilities (10 High, 7 Medium)</span>
+<span class="t-red">Found 14 vulnerabilities (7 High, 7 Medium)</span>
 <span class="t-muted">NAME              INSTALLED  FIXED IN   VULNERABILITY         SEVERITY  EPSS</span>
 <span class="t-red">snakeyaml         1.33       2.0        GHSA-mjmj-j48q-9wg2  High      99.6%</span>
 <span class="t-red">gson              2.8.6      2.8.9      GHSA-4jrv-ppp4-jm57  High      12.2%</span>
 <span class="t-yellow">httpclient        4.5.6      4.5.13     GHSA-7r82-7xv7-xcpj  Medium     9.0%</span>
-<span class="t-red">jackson-databind  2.11.3     2.12.6.1   GHSA-57j2-w4cx-62h2  High       4.9%</span>
-<span class="t-red">jackson-databind  2.11.3     2.12.7.1   GHSA-rgv9-q543-rqg4  High       3.4%</span>
-<span class="t-red">jackson-databind  2.11.3     2.12.7.1   GHSA-jjjh-jjxp-wpff  High       3.4%</span>
-<span class="t-muted">  ... (17 total)</span></pre>
+<span class="t-muted">  ... (14 total)</span></pre>
                 </div>
 
                 <div class="table-wrapper">
@@ -201,27 +190,6 @@
                                 <td class="col-pkg">4.5.6</td>
                                 <td><span class="badge badge-medium">MED</span></td>
                                 <td class="col-epss">9.0%</td>
-                            </tr>
-                            <tr>
-                                <td class="col-cve">GHSA-57j2-w4cx-62h2</td>
-                                <td class="col-pkg">jackson-databind</td>
-                                <td class="col-pkg">2.11.3</td>
-                                <td><span class="badge badge-high">HIGH</span></td>
-                                <td class="col-epss">4.9%</td>
-                            </tr>
-                            <tr>
-                                <td class="col-cve">GHSA-rgv9-q543-rqg4</td>
-                                <td class="col-pkg">jackson-databind</td>
-                                <td class="col-pkg">2.11.3</td>
-                                <td><span class="badge badge-high">HIGH</span></td>
-                                <td class="col-epss">3.4%</td>
-                            </tr>
-                            <tr>
-                                <td class="col-cve">GHSA-jjjh-jjxp-wpff</td>
-                                <td class="col-pkg">jackson-databind</td>
-                                <td class="col-pkg">2.11.3</td>
-                                <td><span class="badge badge-high">HIGH</span></td>
-                                <td class="col-epss">3.4%</td>
                             </tr>
                         </tbody>
                     </table>
@@ -262,8 +230,7 @@
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make remediate</span>
 <span class="t-muted">Configuring Lightwell Network as Maven repository...</span>
-<span class="t-muted">$ curl .../jackson-databind/maven-metadata.xml</span>
-<span class="t-green">&#10003;</span> jackson-databind:2.11.3 <span class="t-muted">&rarr;</span> <span class="t-green">2.11.3.rhlw-00004</span>  <span class="t-muted">[remediated]</span>
+<span class="t-muted">$ curl .../snakeyaml/maven-metadata.xml</span>
 <span class="t-green">&#10003;</span> snakeyaml:1.33 <span class="t-muted">&rarr;</span> <span class="t-green">1.33.0.rhlw-00001</span>  <span class="t-muted">[remediated]</span>
 <span class="t-green">&#10003;</span> httpclient:4.5.6 <span class="t-muted">&rarr;</span> <span class="t-green">4.5.6.rhlw-00001</span>  <span class="t-muted">[remediated]</span>
 <span class="t-green">&#10003;</span> gson:2.8.6 <span class="t-muted">&rarr;</span> <span class="t-green">2.8.6.rhlw-00002</span>  <span class="t-muted">[remediated]</span>
@@ -271,16 +238,6 @@
                 </div>
 
                 <div class="version-transitions">
-                    <div class="version-card" data-animate="true">
-                        <h4 class="version-pkg">jackson-databind</h4>
-                        <div class="version-change">
-                            <span class="version-old">2.11.3</span>
-                            <span class="version-arrow" aria-hidden="true">
-                                <svg width="32" height="16" viewBox="0 0 32 16" fill="none"><path d="M0 8h28M22 2l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </span>
-                            <span class="version-new">2.11.3<span class="rhlw-suffix">.rhlw-00004</span></span>
-                        </div>
-                    </div>
                     <div class="version-card" data-animate="true">
                         <h4 class="version-pkg">snakeyaml</h4>
                         <div class="version-change">
@@ -318,7 +275,7 @@
                         <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
                         <path d="M10 9v4M10 7h0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                    <p><strong>.rhlw-00004</strong> means 4 cumulative security patches on your exact version. Same API. Same behavior. Patched vulnerabilities.</p>
+                    <p><strong>.rhlw-00001</strong> means 1 cumulative security patch on your exact version. Same API. Same behavior. Patched vulnerabilities.</p>
                 </div>
             </div>
             <div class="panel-footer">
@@ -342,7 +299,7 @@
                 <div class="comparison">
                     <div class="comparison-before">
                         <span class="comparison-label">Before</span>
-                        <span class="stat-number stat-number-sm danger-text">17</span>
+                        <span class="stat-number stat-number-sm danger-text">14</span>
                         <span class="comparison-unit">CVEs</span>
                     </div>
                     <div class="comparison-arrow" aria-hidden="true">
@@ -430,27 +387,27 @@
                         <span class="terminal-title">Terminal</span>
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make sbom</span>
-<span class="t-muted">Generating SPDX 2.3 SBOM for jackson-databind...</span></pre>
+<span class="t-muted">Generating SPDX 2.3 SBOM for snakeyaml...</span></pre>
                 </div>
 
                 <div class="json-block">
                     <div class="json-block-header">
                         <span class="json-format-badge">SPDX 2.3</span>
-                        <span class="json-filename">jackson-databind-2.11.3.rhlw-00004.spdx.json</span>
+                        <span class="json-filename">snakeyaml-1.33.0.rhlw-00001.spdx.json</span>
                     </div>
                     <pre class="json-body">{
   <span class="j-key">"spdxVersion"</span>: <span class="j-str">"SPDX-2.3"</span>,
   <span class="j-key">"dataLicense"</span>: <span class="j-str">"CC0-1.0"</span>,
   <span class="j-key">"SPDXID"</span>: <span class="j-str">"SPDXRef-DOCUMENT"</span>,
-  <span class="j-key">"name"</span>: <span class="j-str">"jackson-databind-2.11.3.rhlw-00004"</span>,
+  <span class="j-key">"name"</span>: <span class="j-str">"snakeyaml-1.33.0.rhlw-00001"</span>,
   <span class="j-key">"packages"</span>: [{
-    <span class="j-key">"name"</span>: <span class="j-str">"jackson-databind"</span>,
-    <span class="j-key">"versionInfo"</span>: <span class="j-str">"2.11.3.rhlw-00004"</span>,
+    <span class="j-key">"name"</span>: <span class="j-str">"snakeyaml"</span>,
+    <span class="j-key">"versionInfo"</span>: <span class="j-str">"1.33.0.rhlw-00001"</span>,
     <span class="j-key highlight-field">"supplier"</span>: <span class="j-str highlight-field">"Organization: Red Hat"</span>,
     <span class="j-key">"downloadLocation"</span>: <span class="j-str">"https://lw.cdn.redhat.com/..."</span>,
     <span class="j-key">"externalRefs"</span>: [{
       <span class="j-key">"referenceType"</span>: <span class="j-str">"purl"</span>,
-      <span class="j-key highlight-field">"referenceLocator"</span>: <span class="j-str highlight-field">"pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.11.3.rhlw-00004"</span>
+      <span class="j-key highlight-field">"referenceLocator"</span>: <span class="j-str highlight-field">"pkg:maven/org.yaml/snakeyaml@1.33.0.rhlw-00001"</span>
     }]
   }]
 }</pre>
@@ -494,7 +451,7 @@
                     <dl class="attestation-fields">
                         <div class="att-field">
                             <dt>Package</dt>
-                            <dd>jackson-databind-2.11.3.rhlw-00004</dd>
+                            <dd>snakeyaml-1.33.0.rhlw-00001</dd>
                         </div>
                         <div class="att-field">
                             <dt>Build Type</dt>
@@ -547,7 +504,7 @@
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make vex</span>
 <span class="t-muted">Fetching VEX records for Java remediated packages...</span>
 <span class="t-green">522 CVE records in the Java catalog.</span>
-<span class="t-green">4 records match this project's dependencies.</span></pre>
+<span class="t-green">3 records match this project's dependencies.</span></pre>
                 </div>
 
                 <div class="vex-grid">
@@ -573,16 +530,6 @@
                     </div>
                     <div class="vex-card">
                         <div class="vex-card-top">
-                            <span class="badge badge-high">HIGH</span>
-                            <span class="vex-status">FIXED</span>
-                        </div>
-                        <h4 class="vex-cve">GHSA-57j2-w4cx-62h2</h4>
-                        <p class="vex-pkg">jackson-databind 2.11.3</p>
-                        <p class="vex-fixed">Fixed in <strong>2.11.3.rhlw-00004</strong></p>
-                        <p class="vex-summary">Server-side request forgery via nested type IDs</p>
-                    </div>
-                    <div class="vex-card">
-                        <div class="vex-card-top">
                             <span class="badge badge-medium">MED</span>
                             <span class="vex-status">FIXED</span>
                         </div>
@@ -592,7 +539,7 @@
                         <p class="vex-summary">Improper input validation in URI authority parsing</p>
                     </div>
                 </div>
-                <p class="vex-footnote">Showing 4 of 17 VEX records for this project. All vulnerabilities have status <strong>FIXED</strong>.</p>
+                <p class="vex-footnote">Showing 3 of 14 VEX records for this project. All vulnerabilities have status <strong>FIXED</strong>.</p>
             </div>
             <div class="panel-footer">
                 <button class="btn-prev" data-prev="6"><span aria-hidden="true">&larr;</span> Back</button>
