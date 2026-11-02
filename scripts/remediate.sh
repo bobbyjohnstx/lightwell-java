@@ -82,6 +82,7 @@ done <<< "$DEPS"
 
 echo "Re-resolving dependencies with updated versions..."
 echo "  \$ mvn dependency:resolve -Plightwell -U -s settings.xml"
+echo "  (this may take 30-60 seconds)"
 mvn -f "$POM_FILE" dependency:resolve -U \
     -s "$SETTINGS_FILE" \
     -Dmaven.repo.local="$REPO_DIR" \

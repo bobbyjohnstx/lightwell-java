@@ -49,7 +49,7 @@ test: ## Run unit tests
 test-integration: ## Run full demo cycle against live Lightwell API
 	@bash tests/test_integration.sh
 
-run: ## Run the Spring Boot chatbot app (run 'make remediate' first for Spring Boot compatibility)
+run: ## Run the Spring Boot chatbot app (port 8080)
 	@mvn -f chatbot/pom.xml spring-boot:run -Dmaven.repo.local=./repo -q
 
 demo: ## Serve the demo dashboard at http://localhost:8001/demo.html

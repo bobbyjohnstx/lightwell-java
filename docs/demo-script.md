@@ -42,7 +42,6 @@ make scan
 > "We run a vulnerability scan. Your team probably uses BlackDuck — 4 of our 8 FSI design partners do. Same story regardless of scanner."
 
 **What to point out:**
-- jackson-databind 2.11.3: CVE-2020-36518 — deeply nested JSON causes DoS
 - snakeyaml 1.33: CVE-2022-1471 — arbitrary code execution via YAML deserialization
 - httpclient 4.5.6: CVE-2020-13956 — malformed URI misinterpretation
 - gson 2.8.6: CVE-2022-25647 — deserialization of untrusted data
@@ -57,7 +56,6 @@ make remediate APP=chatbot
 > "Watch what happens. The script checks each dependency against the Lightwell catalog — 32,000+ libraries, 150 unique CVEs remediated. It finds patched versions and updates the pom.xml. Same base versions, same API compatibility — just with security patches backported by Red Hat engineers."
 
 **What to point out:**
-- jackson-databind → 2.11.3.rhlw-00004 (4 cumulative patches)
 - snakeyaml → 1.33.0.rhlw-00001
 - httpclient → 4.5.6.rhlw-00001
 - gson → 2.8.6.rhlw-00002

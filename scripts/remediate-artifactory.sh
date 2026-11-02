@@ -43,6 +43,13 @@ echo ""
 # Save original pom.xml
 cp "$POM_FILE" "${POM_FILE}.orig"
 
+# Back up existing settings.xml before overwriting with JFrog credentials
+if [[ -f "$PROJECT_DIR/settings.xml" ]]; then
+    cp "$PROJECT_DIR/settings.xml" "$PROJECT_DIR/settings.xml.bak"
+    echo "Backed up existing settings.xml → settings.xml.bak"
+    echo ""
+fi
+
 # Generate settings.xml with JFrog Artifactory as the Lightwell source
 (umask 077 && cat > "$PROJECT_DIR/settings.xml" << SETTINGS_EOF
 <?xml version="1.0" encoding="UTF-8"?>

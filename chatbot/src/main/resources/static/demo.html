@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lightwell Network — Java Supply Chain Security Demo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700;900&family=Red+Hat+Text:wght@400;500;700&family=Red+Hat+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/demo.css">
 </head>
 <body>
@@ -107,7 +104,7 @@
                         <span class="terminal-title">Terminal</span>
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">mvn dependency:tree</span>
-<span class="t-muted">[INFO] com.example:lightwell-demo:jar:1.0.0</span>
+<span class="t-muted">[INFO] com.demo:lightwell-chatbot:jar:1.0.0</span>
 <span class="t-muted">[INFO] +- </span>org.yaml:snakeyaml:jar:<span class="t-green">1.33</span>
 <span class="t-muted">[INFO] +- </span>org.apache.httpcomponents:httpclient:jar:<span class="t-green">4.5.6</span>
 <span class="t-muted">[INFO] +- </span>com.google.code.gson:gson:jar:<span class="t-green">2.8.6</span>
@@ -148,7 +145,7 @@
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make scan</span>
 
 <span class="t-muted">Scanner: Grype</span>
-<span class="t-muted">  $ grype dir:. --add-cpes-from-package</span>
+<span class="t-muted">  $ grype dir:chatbot/ --only-fixed</span>
 
 <span class="t-red">Found 14 vulnerabilities (7 High, 7 Medium)</span>
 <span class="t-muted">NAME              INSTALLED  FIXED IN   VULNERABILITY         SEVERITY  EPSS</span>
@@ -321,7 +318,7 @@
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make scan</span>
 <span class="t-muted">Scanner: Grype</span>
-<span class="t-muted">  $ grype dir:. --add-cpes-from-package</span>
+<span class="t-muted">  $ grype dir:chatbot/ --only-fixed</span>
 
 <span class="t-green">No vulnerabilities found</span></pre>
                 </div>
@@ -376,7 +373,7 @@
             </div>
             <div class="panel-body">
                 <div class="narrative">
-                    <p>Every JAR ships with an auditable software bill of materials.</p>
+                    <p>Every remediated package has an auditable SBOM &mdash; available via Lightwell Lens or CycloneDX Maven plugin.</p>
                 </div>
 
                 <div class="terminal">
@@ -387,13 +384,20 @@
                         <span class="terminal-title">Terminal</span>
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make sbom</span>
-<span class="t-muted">Generating SPDX 2.3 SBOM for snakeyaml...</span></pre>
+<span class="t-muted">=== SBOM Inspection ===</span>
+
+<span class="t-muted">--- snakeyaml-1.33.0.rhlw-00001.jar ---</span>
+<span class="t-green">  Build origin: Red Hat Lightwell</span>
+
+<span class="t-muted">SBOMs available via:</span>
+  1. Lightwell Lens (console.redhat.com/lightwell/lens)
+  2. CycloneDX Maven plugin: <span class="t-green">mvn cyclonedx:makeBom</span></pre>
                 </div>
 
                 <div class="json-block">
                     <div class="json-block-header">
                         <span class="json-format-badge">SPDX 2.3</span>
-                        <span class="json-filename">snakeyaml-1.33.0.rhlw-00001.spdx.json</span>
+                        <span class="json-filename">SBOM format (via Lightwell Lens)</span>
                     </div>
                     <pre class="json-body">{
   <span class="j-key">"spdxVersion"</span>: <span class="j-str">"SPDX-2.3"</span>,
@@ -428,7 +432,7 @@
             </div>
             <div class="panel-body">
                 <div class="narrative">
-                    <p>Cryptographic proof of HOW this JAR was built.</p>
+                    <p>Cryptographic proof of HOW this JAR was built &mdash; viewable in Lightwell Lens.</p>
                 </div>
 
                 <div class="terminal">
@@ -439,8 +443,13 @@
                         <span class="terminal-title">Terminal</span>
                     </div>
                     <pre class="terminal-body"><span class="t-prompt">$</span> <span class="t-cmd">make provenance</span>
-<span class="t-muted">Fetching SLSA provenance attestation...</span>
-<span class="t-green">Attestation verified.</span></pre>
+<span class="t-muted">=== SLSA L3 Provenance Verification ===</span>
+
+<span class="t-muted">--- snakeyaml-1.33.0.rhlw-00001.jar ---</span>
+  Build origin: Red Hat Lightwell (<span class="t-green">SLSA Level 3</span>)
+  Provenance: Tekton Chains pipeline, signed build artifacts
+
+<span class="t-muted">  Full attestations available via Lightwell Lens</span></pre>
                 </div>
 
                 <div class="attestation-card">

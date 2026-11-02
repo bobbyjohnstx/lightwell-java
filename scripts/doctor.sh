@@ -40,6 +40,13 @@ else
     fail "Maven not found — brew install maven"
 fi
 
+if command -v python3 &>/dev/null; then
+    PY_VERSION=$(python3 --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+    pass "Python $PY_VERSION"
+else
+    fail "Python3 not found — required by remediate and vex scripts"
+fi
+
 # --- Credentials ---
 echo ""
 echo "Credentials:"

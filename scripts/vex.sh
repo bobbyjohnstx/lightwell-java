@@ -13,10 +13,9 @@ echo ""
 echo "Source: $OSV_BASE_URL"
 echo ""
 
-# Get direct dependency artifact IDs from pom.xml
 ARTIFACTS=$(grep -A1 '<artifactId>' "$POM_FILE" | grep -oE '>([^<]+)<' | sed 's/[><]//g' | grep -v 'spring-boot\|exec-maven\|lightwell' || true)
 
-# Fetch the OSV index
+echo "Fetching OSV index..."
 INDEX=$(curl -sL --netrc "$OSV_BASE_URL/" 2>/dev/null)
 
 if [[ -z "$INDEX" ]]; then
@@ -29,43 +28,65 @@ TOTAL=$(echo "$JSON_FILES" | wc -l | tr -d ' ')
 
 echo "Found $TOTAL total CVE records in Java remediated catalog."
 echo ""
-echo "Showing records relevant to this project's dependencies:"
+
+# Bulk-fetch all JSON files in parallel to a temp directory
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+echo "Downloading CVE records (parallel)..."
+echo "$JSON_FILES" | xargs -P 20 -I{} \
+    curl -sL --netrc -o "$TMPDIR/{}" "$OSV_BASE_URL/{}" 2>/dev/null
+
+echo "Filtering to this project's dependencies..."
 echo ""
 
-SHOWN=0
-for json_file in $JSON_FILES; do
-    DATA=$(curl -sL --netrc "$OSV_BASE_URL/$json_file" 2>/dev/null)
+# Process all downloaded files locally with a single python3 invocation
+python3 - "$TMPDIR" $ARTIFACTS << 'PYEOF'
+import json, os, sys, glob
 
-    pkg=$(echo "$DATA" | python3 -c "import sys,json; a=json.load(sys.stdin).get('affected',[]); print(a[0]['package']['name'] if a else '')" 2>/dev/null || true)
+tmpdir = sys.argv[1]
+artifacts = sys.argv[2:]
+shown = 0
 
-    # Filter to only show CVEs for our project's dependencies
-    MATCH=false
-    for art in $ARTIFACTS; do
-        if [[ "$pkg" == *"$art"* ]]; then
-            MATCH=true
-            break
-        fi
-    done
-    $MATCH || continue
+for f in sorted(glob.glob(os.path.join(tmpdir, "*.json"))):
+    try:
+        with open(f) as fh:
+            data = json.load(fh)
+    except (json.JSONDecodeError, IOError):
+        continue
 
-    id=$(echo "$DATA" | python3 -c "import sys,json; print(json.load(sys.stdin).get('id',''))" 2>/dev/null)
-    summary=$(echo "$DATA" | python3 -c "import sys,json; print(json.load(sys.stdin).get('summary',''))" 2>/dev/null)
-    severity=$(echo "$DATA" | python3 -c "import sys,json; s=json.load(sys.stdin).get('severity',[]); print(s[0].get('score','N/A') if s else 'N/A')" 2>/dev/null)
-    fixed=$(echo "$DATA" | python3 -c "import sys,json; a=json.load(sys.stdin).get('affected',[]); r=a[0].get('ranges',[{}]) if a else [{}]; e=r[0].get('events',[]) if r else []; print(next((x['fixed'] for x in e if 'fixed' in x),'N/A'))" 2>/dev/null)
-    aliases=$(echo "$DATA" | python3 -c "import sys,json; print(', '.join(json.load(sys.stdin).get('aliases',[])))" 2>/dev/null)
+    affected = data.get("affected", [])
+    if not affected:
+        continue
 
-    echo "  $id"
-    echo "    Package: $pkg"
-    echo "    Fixed in: $fixed"
-    echo "    Severity: $severity"
-    echo "    Aliases: $aliases"
-    echo "    Summary: $summary"
-    echo ""
-    SHOWN=$((SHOWN + 1))
-done
+    pkg = affected[0].get("package", {}).get("name", "")
+    if not any(a in pkg for a in artifacts):
+        continue
 
-echo "---"
-echo "Showed $SHOWN CVE records relevant to this project (of $TOTAL total)."
+    vid = data.get("id", "")
+    summary = data.get("summary", "")
+    severity = data.get("severity", [])
+    score = severity[0].get("score", "N/A") if severity else "N/A"
+
+    ranges = affected[0].get("ranges", [{}])
+    events = ranges[0].get("events", []) if ranges else []
+    fixed = next((x["fixed"] for x in events if "fixed" in x), "N/A")
+
+    aliases = ", ".join(data.get("aliases", []))
+
+    print(f"  {vid}")
+    print(f"    Package: {pkg}")
+    print(f"    Fixed in: {fixed}")
+    print(f"    Severity: {score}")
+    print(f"    Aliases: {aliases}")
+    print(f"    Summary: {summary}")
+    print()
+    shown += 1
+
+print("---")
+print(f"Showed {shown} CVE records relevant to this project (of {len(glob.glob(os.path.join(tmpdir, '*.json')))} total).")
+PYEOF
+
 echo ""
 echo "This VEX data proves Lightwell has remediated these CVEs."
 echo "During the 14-day embargo period, scanners may still flag these"

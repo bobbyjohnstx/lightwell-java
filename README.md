@@ -6,6 +6,7 @@ Customer-facing demo showing how Red Hat Lightwell Network patches vulnerable Ja
 
 - Java 17+ (tested with OpenJDK 26)
 - Maven 3.9+
+- Python 3 (used by remediate and vex scripts)
 - `~/.netrc` with Lightwell service account credentials:
   ```
   machine packages.redhat.com login <service-account-username> password <service-account-token>
@@ -20,7 +21,7 @@ Customer-facing demo showing how Red Hat Lightwell Network patches vulnerable Ja
 
 ```bash
 make setup                 # Resolve vulnerable deps from Maven Central
-make scan                  # Find CVEs (15 vulnerabilities)
+make scan                  # Find CVEs (14 vulnerabilities)
 make remediate             # Patch via Lightwell (zero code changes)
 make scan                  # Rescan — CVEs reduced
 make verify                # Confirm .rhlw-0000X version suffixes
@@ -76,15 +77,14 @@ Items are flagged as pass (✓), warning (⚠ optional feature unavailable), or 
 
 **Minimal** (`minimal/`) — single Java class using Jackson (JSON) and SnakeYAML. For quick testing.
 
-**Chatbot** (`chatbot/`) — Spring Boot web app with a mocked customer service chatbot UI. Professional look for customer demos. Runs on port 8080. Note: `make run` requires `make remediate` first (jackson-databind 2.11.3 is too old for Spring Boot 3.x auto-configuration).
+**Chatbot** (`chatbot/`) — Spring Boot web app with a mocked customer service chatbot UI. Professional look for customer demos. Runs on port 8080.
 
-**Demo Dashboard** (`demo.html`) — Red Hat branded interactive walkthrough. 8 narrated steps covering the full supply chain security story: 17 CVEs across 4 libraries, remediation, SBOM, provenance, VEX, and architecture. Designed for half-screen use alongside a live terminal.
+**Demo Dashboard** (`demo.html`) — Red Hat branded interactive walkthrough. 8 narrated steps covering the full supply chain security story: 14 CVEs across 3 libraries, remediation, SBOM, provenance, VEX, and architecture. Designed for half-screen use alongside a live terminal.
 
 ```bash
 make setup APP=minimal     # Use minimal app
 make setup APP=chatbot     # Use chatbot app (default)
 make demo                  # Launch demo dashboard at http://localhost:8001/demo.html
-make remediate             # Required before make run (fixes Spring Boot compatibility)
 make run                   # Launch chatbot at http://localhost:8080
 ```
 
@@ -108,7 +108,7 @@ make remediate-jfrog       # Patch via JFrog Artifactory proxy
 make verify                # Show dependency tree, confirm .rhlw suffixes
 make reset                 # Reset to unpatched state
 make demo                  # Serve demo dashboard at http://localhost:8001/demo.html
-make run                   # Start Spring Boot chatbot (port 8080, requires make remediate first)
+make run                   # Start Spring Boot chatbot (port 8080)
 make run-minimal           # Run minimal Jackson/SnakeYAML app
 make sbom                  # Extract SBOM from remediated JARs
 make provenance            # Show SLSA L3 build provenance info
@@ -122,7 +122,7 @@ make test-integration      # Run full demo cycle against live Lightwell API
 
 1. **Setup** resolves pinned vulnerable versions from Maven Central into a project-local repository (`./repo/`). Also generates `settings.xml` with Lightwell credentials from `~/.netrc`.
 2. **Scan** finds known CVEs using whichever scanner is available.
-3. **Remediate** queries the Lightwell catalog for each dependency, finds patched `.rhlw-` versions, updates the `pom.xml`, and re-resolves from Lightwell. Versions show a `.rhlw-0000X` suffix (e.g., `2.11.3.rhlw-00004` means 4 cumulative security patches on version 2.11.3).
+3. **Remediate** queries the Lightwell catalog for each dependency, finds patched `.rhlw-` versions, updates the `pom.xml`, and re-resolves from Lightwell. Versions show a `.rhlw-0000X` suffix (e.g., `1.33.0.rhlw-00001` means 1 cumulative security patch on version 1.33).
 4. **Rescan** shows CVEs resolved for remediated packages.
 5. **Verify** shows the dependency tree with `.rhlw-` suffixes confirming patched versions.
 6. **Reset** restores the original `pom.xml`, deletes the local repo, and re-resolves from Maven Central.
@@ -133,7 +133,6 @@ No application code changes at any step. The remediation updates dependency vers
 
 | Library | Vulnerable Version | Remediated | CVE |
 |---|---|---|---|
-| jackson-databind | 2.11.3 | 2.11.3.rhlw-00004 | CVE-2020-36518 — deeply nested JSON DoS |
 | snakeyaml | 1.33 | 1.33.0.rhlw-00001 | CVE-2022-1471 — arbitrary code execution |
 | httpclient | 4.5.6 | 4.5.6.rhlw-00001 | CVE-2020-13956 — malformed URI handling |
 | gson | 2.8.6 | 2.8.6.rhlw-00002 | CVE-2022-25647 — unsafe deserialization |

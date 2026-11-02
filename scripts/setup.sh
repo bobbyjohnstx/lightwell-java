@@ -62,6 +62,7 @@ fi
 echo ""
 echo "Resolving dependencies from Maven Central..."
 echo "  \$ mvn dependency:resolve -f $APP/pom.xml"
+echo "  (this may take 30-60 seconds on first run)"
 mvn -f "$POM_FILE" dependency:resolve -Dmaven.repo.local="$REPO_DIR" -q
 
 echo ""
